@@ -1,0 +1,54 @@
+<!-- <!DOCTYPE html> -->
+<!-- <html> -->
+<!-- <head> -->
+<!--     <title>Welcome</title> -->
+<!--     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"> -->
+<!-- </head> -->
+<!-- <body> -->
+<!--     <div class="welcome-container"> -->
+<!--         <h1>Welcome, {{ username }}!</h1> -->
+<!--         <p>This is your dashboard.</p> -->
+<!--         <a href="/logout" class="logout-button">Logout</a> -->
+<!--     </div> -->
+<!-- </body> -->
+<!-- </html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css') }}">
+  </head>
+  <body>
+    <header>
+      <h1>Welcome to Trading Analyzer, {{ username }}</h1>
+    </header>
+    <aside>
+      <form id="dateRangeForm" action="/dashboard" method="post">
+        <div class="form-group">
+          <label for="startDate">Start Date:</label>
+        </div>
+        <div class="form-group">
+          <input type="date" id="startDate" name="startDate">
+        </div>
+        <div class="form-group">
+          <label for="endDate">End Date:</label>
+        </div>
+        <div class="form-group">
+          <input type="date" id="endDate" name="endDate">
+        </div>
+        <div class="form-group">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </aside>
+    <main>
+      <canvas id="chart"></canvas>
+    </main>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <!-- <script src="scripts.js"></script> -->
+  </body>
+</html>
