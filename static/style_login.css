@@ -9,8 +9,15 @@ body {
     margin: 0;
 }
 
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
 aside {
-  background-color: #f4f4f4;
+  background-color: #bef5df;
   padding: 20px;
   width: 200px;
   float: left;
@@ -24,6 +31,8 @@ main {
 canvas {
   background-color: #fff;
   border: 1px solid #ccc;
+  width: 100%; /* Make canvas fill its container */
+  height: 300px;
 }
 
 .login-container {
