@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.util import method_is_overridden
 from werkzeug.security import generate_password_hash, check_password_hash
+import yfinance as yf
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -64,10 +65,13 @@ def dashboard():
             return redirect(url_for('index'))
     else:
         # logic to get dates from form and plot chart
-        startdate = request.form['startDate']
-        enddate = request.form['endDate']
-        print(startdate)
-        print(enddate)
+        # startdate = request.form['startDate']
+        # enddate = request.form['endDate']
+        # print(startdate)
+        # print(enddate)
+        tkr = yf.Ticker(request.form['stock-symbol'])
+        stk_data = tkr.history(period=request.form['period'], interval=request.form['interval'])
+        print(stk_data)
         return render_template('dashboard.html', username=session['username'])
 
 @app.route('/logout')

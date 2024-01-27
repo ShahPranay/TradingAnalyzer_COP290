@@ -57,3 +57,9 @@ button {
 button:hover {
     background-color: #0056b3; /* Dark blue */
 }
+
+.styled-label {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}
