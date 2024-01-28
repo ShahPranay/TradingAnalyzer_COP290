@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.util import method_is_overridden
 from werkzeug.security import generate_password_hash, check_password_hash
 import yfinance as yf
+import json
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -71,8 +72,13 @@ def dashboard():
         # print(enddate)
         tkr = yf.Ticker(request.form['stock-symbol'])
         stk_data = tkr.history(period=request.form['period'], interval=request.form['interval'])
-        print(stk_data)
-        return render_template('dashboard.html', username=session['username'])
+        stk_data = stk_data.to_json()
+        stk_data_string = json.dumps(stk_data)
+        # print(stk_data)
+        # Send stk_data to dashboard.html
+        return render_template('dashboard.html', username=session['username'], stk_data = stk_data_string)
+
+        # return render_template('dashboard.html', username=session['username'])
 
 @app.route('/logout')
 def logout():
