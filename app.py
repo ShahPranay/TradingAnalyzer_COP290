@@ -57,28 +57,41 @@ def login():
         flash('Invalid username or password')
         return redirect(url_for('index'))
 
-@app.route('/dashboard', methods=['GET', 'POST'])
+@app.route('/dashboard', methods=['GET'])
 def dashboard():
-    if request.method == 'GET':
-        if 'user_id' in session:
-            return render_template('dashboard.html', username=session['username'])
-        else:
-            return redirect(url_for('index'))
-    else:
-        # logic to get dates from form and plot chart
-        # startdate = request.form['startDate']
-        # enddate = request.form['endDate']
-        # print(startdate)
-        # print(enddate)
-        tkr = yf.Ticker(request.form['stock-symbol'])
-        stk_data = tkr.history(period=request.form['period'], interval=request.form['interval'])
-        stk_data = stk_data.to_json()
-        stk_data_string = json.dumps(stk_data)
-        # print(stk_data)
-        # Send stk_data to dashboard.html
-        return render_template('dashboard.html', username=session['username'], stk_data = stk_data_string)
+    return render_template('dashboard.html', username=session['username'])
 
-        # return render_template('dashboard.html', username=session['username'])
+@app.route('/data', methods=['POST'])
+def getdata():
+    stock_name = request.json['stock_name']
+    stock_period = request.json['period']
+    stock_interval = request.json['interval']
+
+    tkr = yf.Ticker(stock_name)
+    stk_data = tkr.history(period=stock_period, interval=stock_interval)
+
+    # Ensure data is sorted by time
+    stk_data = stk_data.sort_index()
+
+    # Formatting data for Chart.js financial chart
+    ohlc_data = []
+    for index, row in stk_data.iterrows():
+        ohlc_data.append({
+            'x': index.strftime('%Y-%m-%dT%H:%M:%S'),  # ISO 8601 format
+            'o': row['Open'],
+            'h': row['High'],
+            'l': row['Low'],
+            'c': row['Close']
+        })
+
+    chart_data = {
+        'datasets': [{
+            'label': stock_name,
+            'data': ohlc_data
+        }]
+    }
+    print("reqest processed")
+    return jsonify(chart_data)
 
 @app.route('/logout')
 def logout():

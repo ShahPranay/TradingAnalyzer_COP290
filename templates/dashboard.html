@@ -5,26 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'style_dashboard.css') }}">
-
-    <!-- JQuery links  -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-    <!--Added -->
-    <link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/stocktools/gui.css">
-    <link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/annotations/popup.css">
-
-    <script src="https://code.highcharts.com/stock/highstock.js"></script>
-    <script src="https://code.highcharts.com/stock/modules/data.js"></script>
-
-    <script src="https://code.highcharts.com/stock/indicators/indicators-all.js"></script>
-
-    <script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
-    <script src="https://code.highcharts.com/stock/modules/annotations-advanced.js"></script>
-    <script src="https://code.highcharts.com/stock/modules/price-indicator.js"></script>
-    <script src="https://code.highcharts.com/stock/modules/full-screen.js"></script>
-
-    <script src="https://code.highcharts.com/stock/modules/stock-tools.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
 </head>
 <body>
     <header>
@@ -32,152 +16,49 @@
     </header>
     <div class="container">
         <aside>
-            <form id="dateRangeForm" action="/dashboard" method="post">
-              <div class="form-group">
-                <input type="text" name="stock-symbol" placeholder="Stock Symbol" required>
-              </div>
-              <div class="form-group">
-                <label class="styled-label">Select Period</label>
-                <select id="period" name="period">
-                  <option value="1d">1 day</option>
-                  <option value="5d">5 day</option>
-                  <option value="1mo">1 month</option>
-                  <option value="3mo">3 month</option>
-                  <option value="6mo">6 months</option>
-                  <option value="6mo">6 months</option>
-                  <option value="1y">1 year</option>
-                  <option value="max">Max</option>
-                  </select>
-              </div>
-              <div class="form-group">
-                <label class="styled-label">Select Interval</label>
-                <select id="interval" name="interval">
-                  <option value="1m">1 minute</option>
-                  <option value="2m">2 minutes</option>
-                  <option value="5m">5 minutes</option>
-                  <option value="15m">15 minutes</option>
-                  <option value="30m">30 minutes</option>
-                  <option value="60m">60 minutes</option>
-                  <option value="90m">90 minutes</option>
-                  <option value="1d">1 day</option>
-                  <option value="5d">5 days</option>
-                  <option value="1wk">1 week</option>
-                  <option value="1mo">1 month</option>
-                  </select>
-              </div>
-              <div class="form-group">
-                  <button type="submit">Submit</button>
-              </div>
-                <!-- <h2>Enter Date Range</h2> -->
-                <!-- <div class="form-group"> -->
-                <!--     <label for="startDate">Start Date:</label> -->
-                <!--     <input type="date" id="startDate" name="startDate"> -->
-                <!-- </div> -->
-                <!-- <div class="form-group"> -->
-                <!--     <label for="endDate">End Date:</label> -->
-                <!--     <input type="date" id="endDate" name="endDate"> -->
-                <!-- </div> -->
-            </form>
+          <form id="stock_form">
+            <div class="form-group">
+              <input type="text" id="stock-symbol" name="stock-symbol" placeholder="Stock Symbol" required>
+            </div>
+            <div class="form-group">
+              <label class="styled-label">Select Period</label>
+              <select id="period" name="period">
+                <option value="1d">1 day</option>
+                <option value="5d">5 day</option>
+                <option value="1mo">1 month</option>
+                <option value="3mo">3 month</option>
+                <option value="6mo">6 months</option>
+                <option value="6mo">6 months</option>
+                <option value="1y">1 year</option>
+                <option value="max">Max</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="styled-label">Select Interval</label>
+              <select id="interval" name="interval">
+                <option value="1m">1 minute</option>
+                <option value="2m">2 minutes</option>
+                <option value="5m">5 minutes</option>
+                <option value="15m">15 minutes</option>
+                <option value="30m">30 minutes</option>
+                <option value="60m">60 minutes</option>
+                <option value="90m">90 minutes</option>
+                <option value="1d">1 day</option>
+                <option value="5d">5 days</option>
+                <option value="1wk">1 week</option>
+                <option value="1mo">1 month</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button id="update">Update</button>
+            </div>
+          </form>
         </aside>
         <main>    
-            <div id="container" class="chart"></div>
-            
-            
-            
+          <canvas id="myChart"></canvas>
         </main>
+        <script src="{{ url_for('static', filename = 'plot_chart.js') }}"></script>
     </div>
 
-    <script>
-        var chartdata = []
-        var volume = []
-    
-        function processData(data)
-        {
-            console.log("hello");
-            // var data = data.stk_data;
-
-            for (var i=0; i < data.length; i++)
-            {
-                // var date = new Date();
-                chartdata.push([
-                    // date.getTime(), // the date
-                    data[i][0], // open
-                    data[i][1], // high
-                    data[i][2], // low
-                    data[i][3] // close
-                ]);
-                volume.push([
-                    // date.getTime(), // the date
-                    data[i][5] // the volume
-                ]);
-            }
-        }
-    
-    
-        function plotCharts(){
-            Highcharts.stockChart('container', {
-                navigation: {
-                    bindings: {
-                        rect: {
-                            annotationsOptions: {
-                                shapeOptions: {
-                                    fill: 'rgba(255, 0, 0, 0.8)'
-                                }
-                            }
-                        }
-                    },
-                    annotationsOptions: {
-                        typeOptions: {
-                            line: {
-                                stroke: 'rgba(255, 0, 0, 1)',
-                                strokeWidth: 10
-                            }
-                        }
-                    }
-                },
-                yAxis: [{
-                    labels: {
-                        align: 'left'
-                    },
-                    height: '80%'
-                }, {
-                    labels: {
-                        align: 'left'
-                    },
-                    top: '80%',
-                    height: '20%',
-                    offset: 0
-                }],
-                series: [{
-                    type: 'line',
-                    id: 'aapl-ohlc',
-                    name: 'AAPL Stock Price',
-                    data: chartdata
-                }, {
-                    type: 'column',
-                    id: 'aapl-volume',
-                    name: 'AAPL Volume',
-                    data: volume,
-                    yAxis: 1
-                }]
-            });
-    
-    
-        }
-
-        $( document ).ready(function()
-        {
-            $.getJSON('/dashboard', function(){
-                console.log("hello");
-                var data = JSON.parse('{{stk_data}}');
-                console.log("hello");
-                processData(data);
-                plotCharts();
-            });
-        });
-    
-    </script>
-
-    
 </body>
 </html>
