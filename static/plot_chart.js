@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return value;
   }
 
-  var update = function() {
+  document.getElementById('update').addEventListener('click', function (){
     const stockName = document.querySelector('#stock-symbol').value;
     const period = document.querySelector('#period').value;
     const interval = document.querySelector('#interval').value;
@@ -43,20 +43,32 @@ document.addEventListener('DOMContentLoaded', function () {
         'Content-Type': 'application/json'
       }
     })
-      .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+  })
       .then(data => {
-        plotData = data.data.map(parseDates);
-        // process plotData
-        console.log(plotData);
-        myChart.config.data.datasets = [
-          {
-            label: data.label,
-            data: plotData
-          }
-        ]
-      });
-    myChart.update();
-  };
+        if (data && data.data) {
+          plotData = data.data.map(parseDates);
+          // process plotData
+          console.log(plotData);
+          myChart.config.data.datasets = [
+              {
+                  label: data.label,
+                  data: plotData
+              }
+          ];
+          myChart.update();
+      } else {
+          console.error('Invalid response format:', data);
+      }
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+    });
+  });
 
-  document.getElementById('update').addEventListener('click', update);
+  // document.getElementById('update').addEventListener('click', update);
 });
