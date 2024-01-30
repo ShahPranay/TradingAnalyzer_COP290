@@ -85,10 +85,8 @@ def getdata():
         })
 
     chart_data = {
-        'datasets': [{
-            'label': stock_name,
-            'data': ohlc_data
-        }]
+        'label': stock_name,
+        'data': ohlc_data
     }
     print("reqest processed")
     return jsonify(chart_data)

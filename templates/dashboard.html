@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'style_dashboard.css') }}">
+    <link rel="shortcut icon" href="#">
     <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
@@ -16,7 +17,7 @@
     </header>
     <div class="container">
         <aside>
-          <form id="stock_form">
+          <form id="stock_form" onsubmit="event.preventDefault()">
             <div class="form-group">
               <input type="text" id="stock-symbol" name="stock-symbol" placeholder="Stock Symbol" required>
             </div>
