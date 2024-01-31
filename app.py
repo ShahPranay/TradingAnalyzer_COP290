@@ -92,12 +92,20 @@ def getdata():
     print("reqest processed")
     return jsonify(chart_data)
 
-@app.route('/stock_names', methods=['GET'])
+@app.route('/stock_names', methods=['POST'])
 def get_stock_names():
     # Fetch and return all available stock names
     # You need to implement this based on your data source (e.g., database)
     # For now, assume you have a list of stock names
-    stock_names = [" ", "AAPL", "GOOGL", "AMZN", "MSFT", "TSLA"]
+    filter_type = request.json['filter_type']
+    stock_names = [" ", "AAPL", "GOOGL", "AMZN", "SBIN.NS"]
+    if filter_type == 'default':
+        pass
+    elif filter_type == 'pe_ratio':
+        stock_names = [" ", "AAPL", "GOOGL", "AMZN", "MSFT", "TSLA"]
+    elif filter_type == 'average_price':
+        stock_names = [ " ","MSFT", "TSLA"]
+    
     return jsonify({'stock_names': stock_names})
 
 @app.route('/logout')

@@ -1,7 +1,32 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  //Fetch available stock names on page load
+  function updateSymbolsList() {
+    const filter_type = document.querySelector('#filter').value;
+    fetch('http://127.0.0.1:5000/stock_names', {
+      method: 'POST',
+      body: JSON.stringify({
+        filter_type: filter_type
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+        stockNames = data.stock_names;
+        updateStockNameDropdown();
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+    });
+  }
   // Fetch available stock names on page load
+
   var stockNames = [];
   fetch('http://127.0.0.1:5000/stock_names')
     .then(response => response.json())
@@ -44,6 +69,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }];
   }
 
+  updateSymbolsList();
+
+  // Fetch available stock names selecting a filter
+  document.getElementById('filter').addEventListener('change', function () {
+    updateSymbolsList();
+  });
+
+
+  
+
   document.getElementById('update').addEventListener('click', function () {
     const stockName = document.querySelector('#stock-symbol').value;
     const period = document.querySelector('#period').value;
@@ -66,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return response.json();
       })
+
       .then(data => {
         if (data && data.data) {
 
@@ -143,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateStockNameDropdown() {
     const stockNameDropdown = document.getElementById('stock-symbol');
+    stockNameDropdown.innerHTML = '';
     stockNames.forEach(name => {
       const option = document.createElement('option');
       option.value = name;
