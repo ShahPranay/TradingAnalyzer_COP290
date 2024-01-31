@@ -3,10 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.util import method_is_overridden
 from werkzeug.security import generate_password_hash, check_password_hash
 import yfinance as yf
+import pandas as pd
 import json
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
+Tickers_df = pd.read_csv("tickers_data.csv", index_col=0)
+Tickers_dict = Tickers_df.to_dict(orient='index')
+Symbols_df = pd.read_csv('symbols.csv')
+symbolsList = Symbols_df['Symbol'].tolist()
+symbolsList.insert(0, '')
 
 # Database Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -98,14 +104,27 @@ def get_stock_names():
     # You need to implement this based on your data source (e.g., database)
     # For now, assume you have a list of stock names
     filter_type = request.json['filter_type']
-    stock_names = [" ", "AAPL", "GOOGL", "AMZN", "SBIN.NS"]
+    min_filter_value = request.json['min_filter_value']
+    max_filter_value = request.json['max_filter_value']
+    stock_names = symbolsList
     if filter_type == 'default':
         pass
-    elif filter_type == 'pe_ratio':
-        stock_names = [" ", "AAPL", "GOOGL", "AMZN", "MSFT", "TSLA"]
-    elif filter_type == 'average_price':
-        stock_names = [ " ","MSFT", "TSLA"]
-    
+    elif filter_type == 'trailingPE':
+        stock_names = [symbol for symbol, info in Tickers_dict.items() if
+                    info.get('trailingPE', 0.0) > min_filter_value and
+                    info.get('trailingPE', 0.0) < max_filter_value]
+    elif filter_type == 'forwardPE':
+        stock_names = [symbol for symbol, info in Tickers_dict.items() if
+                    info.get('forwardPE', 0.0) > min_filter_value and
+                    info.get('forwardPE', 0.0) < max_filter_value]
+    elif filter_type == 'fiftyDayAverage':
+        stock_names = [symbol for symbol, info in Tickers_dict.items() if
+                    info.get('fiftyDayAverage', 0.0) > min_filter_value and
+                    info.get('fiftyDayAverage', 0.0) < max_filter_value]
+    elif filter_type == 'twoHundredDayAverage':
+        stock_names = [symbol for symbol, info in Tickers_dict.items() if
+                    info.get('twoHundredDayAverage', 0.0) > min_filter_value and
+                    info.get('twoHundredDayAverage', 0.0) < max_filter_value]
     return jsonify({'stock_names': stock_names})
 
 @app.route('/logout')
