@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   const ctx = document.getElementById('myChart').getContext('2d');
+  var stockNames = [];
 
   const zoomOptions = {
     pan: {
@@ -44,6 +45,18 @@ document.addEventListener('DOMContentLoaded', function () {
     return value;
   }
 
+  //Fetch available stock names on page load
+  // Fetch available stock names on page load
+  fetch('http://127.0.0.1:5000/stock_names')
+  .then(response => response.json())
+  .then(data => {
+      stockNames = data.stock_names;
+      updateStockNameDropdown();
+  })
+  .catch(error => {
+      console.error('Fetch error:', error);
+  });
+
   document.getElementById('update').addEventListener('click', function () {
     const stockName = document.querySelector('#stock-symbol').value;
     const period = document.querySelector('#period').value;
@@ -86,6 +99,16 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Fetch error:', error);
     });
   });
+
+  function updateStockNameDropdown() {
+    const stockNameDropdown = document.getElementById('stock-symbol');
+    stockNames.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.text = name;
+        stockNameDropdown.appendChild(option);
+    });
+}
 
   // document.getElementById('update').addEventListener('click', update);
 });

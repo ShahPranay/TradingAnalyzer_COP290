@@ -91,6 +91,14 @@ def getdata():
     print("reqest processed")
     return jsonify(chart_data)
 
+@app.route('/stock_names', methods=['GET'])
+def get_stock_names():
+    # Fetch and return all available stock names
+    # You need to implement this based on your data source (e.g., database)
+    # For now, assume you have a list of stock names
+    stock_names = [" ", "AAPL", "GOOGL", "AMZN", "MSFT", "TSLA"]
+    return jsonify({'stock_names': stock_names})
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
