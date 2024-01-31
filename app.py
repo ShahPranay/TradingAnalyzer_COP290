@@ -125,6 +125,32 @@ def get_stock_names():
                     info.get('twoHundredDayAverage', 0.0) < max_filter_value]
     return jsonify({'stock_names': stock_names})
 
+@app.route('/stock_info', methods=['POST'])
+def get_stock_info():
+    stock_name = "SBIN.NS"
+    stock_info = yf.Ticker(stock_name).info
+    dayLow = stock_info['dayLow']
+    dayHigh = stock_info['dayHigh']
+    yearLow = stock_info['fiftyTwoWeekLow']
+    yearHigh = stock_info['fiftyTwoWeekHigh']
+    Open = stock_info['open']
+    previousClose = stock_info['previousClose']
+    volume = stock_info['volume']
+    currentPrice = stock_info['currentPrice']
+    marketCap = stock_info['marketCap'] 
+    trailingPE = stock_info['trailingPE']
+    forwardPE = stock_info['forwardPE']
+    fiftyDayAverage = stock_info['fiftyDayAverage']
+    twoHundredDayAverage = stock_info['twoHundredDayAverage']
+    dividendYield = stock_info['dividendYield']
+    totalRevenue = stock_info['totalRevenue']
+    totalDebt = stock_info['totalDebt']
+    about = stock_info['longBusinessSummary']
+    return jsonify({'dayLow': dayLow, 'dayHigh': dayHigh, 'yearLow': yearLow, 'yearHigh': yearHigh, 'Open': Open, 'previousClose': previousClose, 'volume': volume,
+                    'currentPrice': currentPrice, 'marketCap': marketCap, 'trailingPE': trailingPE, 'forwardPE': forwardPE, 'fiftyDayAverage': fiftyDayAverage,
+                    'twoHundredDayAverage': twoHundredDayAverage, 'dividendYield': dividendYield, 'totalRevenue': totalRevenue, 'totalDebt': totalDebt, 'about': about
+                    })
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)

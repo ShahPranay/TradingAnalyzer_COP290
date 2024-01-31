@@ -23,6 +23,18 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 </head>
+
+<style>
+  .box {
+            
+            padding: 10px; /* Padding around the content inside the box */
+            width: 150px; /* Make the box width fit its content */
+            display: inline-block; /* Display as inline-block to wrap the text inside */
+            text-align: center; 
+            height: 70px;
+        }
+
+</style>
 <body>
     <header>
         <h1>Welcome to Trading Analyzer, {{ username }}</h1>
@@ -40,5 +52,90 @@
     </div>
     <div class="chart" id="myChart"></div>
     <script src="{{ url_for('static', filename = 'plot_chart.js') }}"></script>
+    <h1 class="heading">Overview</h1>
+    <h2 class="sub-heading">Performance</h2>
+    <div class="box-container">
+      <div class="box">
+        <h3 class="box-heading">Today's Low</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Today's High</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading"> 52W Low</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading"> 52W High</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      
+    </div>
+
+    <div class="box-container">
+      <div class="box">
+        <h3 class="box-heading">Open</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Prev. Close</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Volume</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Curr. Price</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      
+    </div>
+
+    <h2 class="sub-heading">Fundamentals</h2>
+    <div class="box-container">
+      <div class="box">
+        <h3 class="box-heading">Market Cap</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Trailing P/E</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Forward P/E</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Dividend Yield</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      
+    </div>
+
+    <div class="box-container">
+      <div class="box">
+        <h3 class="box-heading">50 Day Average</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">200 Day Average</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Total Revenue</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      <div class="box">
+        <h3 class="box-heading">Total Debt</h3>
+        <h2 class="box-sub-heading"> 25.8</h2>
+      </div>
+      
+    </div>
+
+    <h1 class="heading">About</h1>
+    <p class="paragraph"> About</p>
 </body>
 </html>
