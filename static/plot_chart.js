@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const zoomOptions = {
     pan: {
       enabled: true,
-      mode: 'xy',
+      mode: 'y',
     },
     zoom: {
       wheel: {
@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
       pinch: {
         enabled: true
       },
+      // drag: {
+      //   enabled: true
+      // },
       mode: 'xy',
       // onZoomComplete({chart}) {
       //   chart.update('none');
@@ -21,16 +24,33 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
+  const scaleOptions = {
+    x: {
+      title: {
+        display: true,
+        text: 'Time'
+      }
+    },
+    y: {
+      title: {
+        display: true,
+        text: 'Price',
+      }
+    }
+  };
+
+
   const chart_config = {
     type: 'candlestick',
     options: {
+      scales: scaleOptions,
       plugins: {
         zoom: zoomOptions,
         title: {
           display: true,
           position: 'bottom',
-          text: 'Zoom level: ',
-        }
+          text: 'Empty',
+        },
       }
     },
     data: {
@@ -48,14 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
   //Fetch available stock names on page load
   // Fetch available stock names on page load
   fetch('http://127.0.0.1:5000/stock_names')
-  .then(response => response.json())
-  .then(data => {
+    .then(response => response.json())
+    .then(data => {
       stockNames = data.stock_names;
       updateStockNameDropdown();
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Fetch error:', error);
-  });
+    });
 
   document.getElementById('update').addEventListener('click', function () {
     const stockName = document.querySelector('#stock-symbol').value;
@@ -73,42 +93,47 @@ document.addEventListener('DOMContentLoaded', function () {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => {
-      if (!response.ok) {
+      .then(response => {
+        if (!response.ok) {
           throw new Error('Network response was not ok');
-      }
-      return response.json();
-  })
+        }
+        return response.json();
+      })
       .then(data => {
         if (data && data.data) {
           plotData = data.data.map(parseDates);
           // process plotData
-          console.log(plotData);
+          // console.log(plotData);
+          myChart.config.options.plugins.title.text = "OHLC chart for " + data.label;
           myChart.config.data.datasets = [
-              {
-                  label: data.label,
-                  data: plotData
-              }
+            {
+              label: data.label,
+              data: plotData
+            }
           ];
           myChart.update();
-      } else {
+        } else {
           console.error('Invalid response format:', data);
-      }
+        }
       })
       .catch(error => {
         console.error('Fetch error:', error);
-    });
+      });
   });
 
   function updateStockNameDropdown() {
     const stockNameDropdown = document.getElementById('stock-symbol');
     stockNames.forEach(name => {
-        const option = document.createElement('option');
-        option.value = name;
-        option.text = name;
-        stockNameDropdown.appendChild(option);
+      const option = document.createElement('option');
+      option.value = name;
+      option.text = name;
+      stockNameDropdown.appendChild(option);
     });
-}
+  }
 
   // document.getElementById('update').addEventListener('click', update);
+  document.getElementById('reset-zoom').addEventListener('click', function () {
+    myChart.resetZoom();
+  });
 });
+

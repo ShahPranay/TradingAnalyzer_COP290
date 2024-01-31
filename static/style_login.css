@@ -33,6 +33,9 @@ canvas {
   border: 1px solid #ccc;
   width: 100%; /* Make canvas fill its container */
   height: 300px;
+  /* -moz-user-select: none; */
+  /* -webkit-user-select: none; */
+  /* -ms-user-select: none; */
 }
 
 .login-container {
