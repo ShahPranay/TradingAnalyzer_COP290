@@ -28,7 +28,7 @@ main {
   overflow: hidden;
 }
 
-canvas {
+#myChart {
   background-color: #fff;
   border: 1px solid #ccc;
   width: 100%; /* Make canvas fill its container */

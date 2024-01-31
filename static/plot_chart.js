@@ -1,72 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const ctx = document.getElementById('myChart').getContext('2d');
-  var stockNames = [];
-
-  const zoomOptions = {
-    pan: {
-      enabled: true,
-      mode: 'y',
-    },
-    zoom: {
-      wheel: {
-        enabled: true
-      },
-      pinch: {
-        enabled: true
-      },
-      // drag: {
-      //   enabled: true
-      // },
-      mode: 'xy',
-      // onZoomComplete({chart}) {
-      //   chart.update('none');
-      // }
-    }
-  };
-
-  const scaleOptions = {
-    x: {
-      title: {
-        display: true,
-        text: 'Time'
-      }
-    },
-    y: {
-      title: {
-        display: true,
-        text: 'Price',
-      }
-    }
-  };
-
-
-  const chart_config = {
-    type: 'candlestick',
-    options: {
-      scales: scaleOptions,
-      plugins: {
-        zoom: zoomOptions,
-        title: {
-          display: true,
-          position: 'bottom',
-          text: 'Empty',
-        },
-      }
-    },
-    data: {
-      datasets: [{}]
-    }
-  };
-
-  var myChart = new Chart(ctx, chart_config);
-
-  function parseDates(value) {
-    value.x = Date.parse(value.x);
-    return value;
-  }
 
   //Fetch available stock names on page load
   // Fetch available stock names on page load
+  var stockNames = [];
   fetch('http://127.0.0.1:5000/stock_names')
     .then(response => response.json())
     .then(data => {
@@ -76,6 +12,37 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => {
       console.error('Fetch error:', error);
     });
+
+  function parseData(response) {
+    var ohlc = [], volume = [];
+
+    for(let i = 0; i < response.length; i++){
+      var date = Date.parse(response[i].x);
+      ohlc.push([
+        date,
+        response[i].o,
+        response[i].h,
+        response[i].l,
+        response[i].c,
+      ]);
+      volume.push([
+        date,
+        response[i].v
+      ]);
+    }
+    return [{
+      type: 'ohlc',
+      id: 'aapl-ohlc',
+      name: 'AAPL Stock Price',
+      data: ohlc
+    }, {
+      type: 'column',
+      id: 'aapl-volume',
+      name: 'AAPL Volume',
+      data: volume,
+      yAxis: 1
+    }];
+  }
 
   document.getElementById('update').addEventListener('click', function () {
     const stockName = document.querySelector('#stock-symbol').value;
@@ -101,17 +68,70 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .then(data => {
         if (data && data.data) {
-          plotData = data.data.map(parseDates);
-          // process plotData
-          // console.log(plotData);
-          myChart.config.options.plugins.title.text = "OHLC chart for " + data.label;
-          myChart.config.data.datasets = [
-            {
-              label: data.label,
-              data: plotData
+
+          myChart = Highcharts.stockChart('myChart', {
+            yAxis: [{
+              labels: {
+                align: 'left'
+              },
+              height: '80%',
+              resize: {
+                enabled: true
+              }
+            }, {
+              labels: {
+                align: 'left'
+              },
+              top: '80%',
+              height: '20%',
+              offset: 0
+            }],
+            tooltip: {
+              shape: 'square',
+              headerShape: 'callout',
+              borderWidth: 0,
+              shadow: false,
+              positioner: function (width, height, point) {
+                const chart = this.chart;
+                let position;
+
+                if (point.isHeader) {
+                  position = {
+                    x: Math.max(
+                      // Left side limit
+                      chart.plotLeft,
+                      Math.min(
+                        point.plotX + chart.plotLeft - width / 2,
+                        // Right side limit
+                        chart.chartWidth - width - chart.marginRight
+                      )
+                    ),
+                    y: point.plotY
+                  };
+                } else {
+                  position = {
+                    x: point.series.chart.plotLeft,
+                    y: point.series.yAxis.top - chart.plotTop
+                  };
+                }
+
+                return position;
+              }
+            },
+            series: parseData(data.data),
+            responsive: {
+              rules: [{
+                condition: {
+                  maxWidth: 800
+                },
+                chartOptions: {
+                  rangeSelector: {
+                    inputEnabled: false
+                  }
+                }
+              }]
             }
-          ];
-          myChart.update();
+          });
         } else {
           console.error('Invalid response format:', data);
         }
