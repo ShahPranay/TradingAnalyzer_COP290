@@ -72,7 +72,7 @@ def getdata():
 
     # Ensure data is sorted by time
     stk_data = stk_data.sort_index()
-
+    print(stk_data)
     # Formatting data for Chart.js financial chart
     ohlc_data = []
     for index, row in stk_data.iterrows():
