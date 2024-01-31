@@ -70,11 +70,9 @@ def dashboard():
 @app.route('/data', methods=['POST'])
 def getdata():
     stock_name = request.json['stock_name']
-    stock_period = request.json['period']
-    stock_interval = request.json['interval']
 
     tkr = yf.Ticker(stock_name)
-    stk_data = tkr.history(period=stock_period, interval=stock_interval)
+    stk_data = tkr.history(period='max', interval='1d')
 
     # Ensure data is sorted by time
     stk_data = stk_data.sort_index()
