@@ -122,11 +122,10 @@ button:hover {
   font-size: 15px; 
 }
 .paragraph {
-  color: #000000; 
+  color: #7dacde; 
   text-align: left;
   font-size: 15px;
-  margin-left: 150px; 
-  margin-right: 150px;
+  width: 800px;
 }
 
 .box-container {

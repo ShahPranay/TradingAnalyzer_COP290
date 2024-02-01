@@ -137,7 +137,7 @@ def get_stock_info():
     previousClose = stock_info['previousClose']
     volume = stock_info['volume']
     currentPrice = stock_info['currentPrice']
-    marketCap = stock_info['marketCap'] 
+    marketCap = stock_info['marketCap']
     trailingPE = stock_info['trailingPE']
     forwardPE = stock_info['forwardPE']
     fiftyDayAverage = stock_info['fiftyDayAverage']

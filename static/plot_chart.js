@@ -165,6 +165,8 @@ function updateStockInfo (stk_info) {
   for(let elem of elems){
     elem.innerHTML = stk_info[elem.id];
   }
+  var about = document.getElementById('about');
+  about.innerHTML = stk_info['about'];
 }
 
 function fetchStockInfo() {

@@ -43,8 +43,10 @@
         <div class="filter-wrapper" id="filterWrapper">
           <select class="filter-select" id="filterSelect" name="filter">
             <option value="default">Select Filter</option>
-            <option value="average_price">Average Price</option>
-            <option value="pe_ratio">P/E Ratio</option>
+            <option value="trailingPE">Trailing P/E ratio</option>
+            <option value="forwardPE">Forward P/E ratio</option>
+            <option value="fiftyDayAverage">50 Day Average</option>
+            <option value="twoHundredDayAverage">200 Day Average</option>
           </select>
           <div class="filter-values" id="filterValues">
             <input type="number" id="filterMin" value="0" placeholder="Min."></input>
@@ -67,19 +69,19 @@
     <div class="box-container">
       <div class="box">
         <h3 class="box-heading">Today's Low</h3>
-        <h2 class="box-sub-heading" id="dayLow"> 25.8</h2>
+        <h2 class="box-sub-heading" id="dayLow"> - </h2>
       </div>
       <div class="box">
         <h3 class="box-heading">Today's High</h3>
-        <h2 class="box-sub-heading" id="dayHigh"> 25.8</h2>
+        <h2 class="box-sub-heading" id="dayHigh"> - </h2>
       </div>
       <div class="box">
         <h3 class="box-heading"> 52W Low</h3>
-        <h2 class="box-sub-heading" id="fiftyTwoWeekLow"> 25.8</h2>
+        <h2 class="box-sub-heading" id="yearLow"> - </h2>
       </div>
       <div class="box">
-        <h3 class="box-heading" id="fiftyTwoWeekHigh"> 52W High</h3>
-        <h2 class="box-sub-heading"> 25.8</h2>
+        <h3 class="box-heading" > 52W High</h3>
+        <h2 class="box-sub-heading" id="yearHigh"> - </h2>
       </div>
 
     </div>
@@ -87,19 +89,19 @@
     <div class="box-container">
       <div class="box">
         <h3 class="box-heading">Open</h3>
-        <h2 class="box-sub-heading" id="open"> 25.8</h2>
+        <h2 class="box-sub-heading" id="Open"> - </h2>
       </div>
       <div class="box">
-        <h3 class="box-heading" id="previousClose">Prev. Close</h3>
-        <h2 class="box-sub-heading"> 25.8</h2>
+        <h3 class="box-heading">Prev. Close</h3>
+        <h2 class="box-sub-heading" id="previousClose"> - </h2>
       </div>
       <div class="box">
-        <h3 class="box-heading" id="volume">Volume</h3>
-        <h2 class="box-sub-heading"> 25.8</h2>
+        <h3 class="box-heading">Volume</h3>
+        <h2 class="box-sub-heading" id="volume"> - </h2>
       </div>
       <div class="box">
-        <h3 class="box-heading" id="currentPrice">Curr. Price</h3>
-        <h2 class="box-sub-heading"> 25.8</h2>
+        <h3 class="box-heading">Curr. Price</h3>
+        <h2 class="box-sub-heading" id="currentPrice"> - </h2>
       </div>
 
     </div>
@@ -107,20 +109,20 @@
     <h2 class="sub-heading" id="subHeading">Fundamentals</h2>
     <div class="box-container">
       <div class="box">
-        <h3 class="box-heading" id="marketCap">Market Cap</h3>
-        <h2 class="box-sub-heading"> 25.8</h2>
+        <h3 class="box-heading">Market Cap</h3>
+        <h2 class="box-sub-heading" id="marketCap"> - </h2>
       </div>
       <div class="box">
         <h3 class="box-heading">Trailing P/E</h3>
-        <h2 class="box-sub-heading" id="trailingPE"> 25.8</h2>
+        <h2 class="box-sub-heading" id="trailingPE"> - </h2>
       </div>
       <div class="box">
         <h3 class="box-heading">Forward P/E</h3>
-        <h2 class="box-sub-heading" id="forwardPE"> 25.8</h2>
+        <h2 class="box-sub-heading" id="forwardPE"> - </h2>
       </div>
       <div class="box">
         <h3 class="box-heading">Dividend Yield</h3>
-        <h2 class="box-sub-heading" id="dividendYield"> 25.8</h2>
+        <h2 class="box-sub-heading" id="dividendYield"> - </h2>
       </div>
 
     </div>
@@ -128,24 +130,24 @@
     <div class="box-container">
       <div class="box">
         <h3 class="box-heading">50 Day Average</h3>
-        <h2 class="box-sub-heading" id="fiftyDayAverage"> 25.8</h2>
+        <h2 class="box-sub-heading" id="fiftyDayAverage"> - </h2>
       </div>
       <div class="box">
         <h3 class="box-heading">200 Day Average</h3>
-        <h2 class="box-sub-heading" id="twoHundredDayAverage"> 25.8</h2>
+        <h2 class="box-sub-heading" id="twoHundredDayAverage"> - </h2>
       </div>
       <div class="box">
-        <h3 class="box-heading" id="totalRevenue">Total Revenue</h3>
-        <h2 class="box-sub-heading"> 25.8</h2>
+        <h3 class="box-heading">Total Revenue</h3>
+        <h2 class="box-sub-heading" id="totalRevenue"> - </h2>
       </div>
       <div class="box">
-        <h3 class="box-heading" id="totalDebt">Total Debt</h3>
-        <h2 class="box-sub-heading"> 25.8</h2>
+        <h3 class="box-heading">Total Debt</h3>
+        <h2 class="box-sub-heading" id="totalDebt"> - </h2>
       </div>
 
     </div>
     <h1 class="heading">About</h1>
-    <p class="paragraph" id="aboutStock"> About</p>
+    <p class="paragraph" id="about"> About</p>
     </div>
 
 </body>
