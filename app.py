@@ -139,14 +139,19 @@ def get_stock_info():
     volume = stock_info.get('volume', '-')
     currentPrice = stock_info.get('currentPrice', '-')
     marketCap = stock_info.get('marketCap', '-')
+    if(marketCap != '-'):
+        marketCap = toCr(marketCap)
     trailingPE = stock_info.get('trailingPE', '-')
     forwardPE = stock_info.get('forwardPE', '-')
     fiftyDayAverage = stock_info.get('fiftyDayAverage', '-')
     twoHundredDayAverage = stock_info.get('twoHundredDayAverage', '-')
     dividendYield = stock_info.get('dividendYield', '-')
     totalRevenue = stock_info.get('totalRevenue','-')
+    if(totalRevenue != '-'):
+        totalRevenue = toCr(totalRevenue)
     totalDebt = stock_info.get('totalDebt', '-')
-    print(totalDebt)
+    if(totalDebt != '-'):
+        totalDebt = toCr(totalDebt)
     about = stock_info['longBusinessSummary']
     return jsonify({'dayLow': dayLow, 'dayHigh': dayHigh, 'yearLow': yearLow, 'yearHigh': yearHigh, 'Open': Open, 'previousClose': previousClose, 'volume': volume,
                     'currentPrice': currentPrice, 'marketCap': marketCap, 'trailingPE': trailingPE, 'forwardPE': forwardPE, 'fiftyDayAverage': fiftyDayAverage,
@@ -158,6 +163,13 @@ def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     return redirect(url_for('index'))
+
+
+def toCr(num):
+    num = num/10000000
+    num = round(num, 2)
+    num = str(num) + 'Cr'
+    return num
 
 if __name__ == '__main__':
     app.run(debug=True)
