@@ -40,11 +40,17 @@
         <h1>Welcome to Trading Analyzer, {{ username }}</h1>
     </header>
     <div class="top-bar">
-          <select id="filter" name="filter">
+        <div class="filter-wrapper" id="filterWrapper">
+          <select class="filter-select" id="filterSelect" name="filter">
             <option value="default">Select Filter</option>
             <option value="average_price">Average Price</option>
             <option value="pe_ratio">P/E Ratio</option>
           </select>
+          <div class="filter-values" id="filterValues">
+            <input type="number" id="filterMin" value="0" placeholder="Min."></input>
+            <input type="number" id="filterMax" value="0" placeholder="Max."></input>
+          </div>
+        </div>
         <div class="stock-search-bar">
           <input type="text" id="searchInput" placeholder="Stock Symbol..."></input>
           <div class="autocomplete-items" id="autocompleteItems"></div>

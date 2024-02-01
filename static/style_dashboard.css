@@ -36,24 +36,39 @@ button:hover {
 }
 
 .chart {
-
+  width: 50%;
+  margin: auto;
 }
 
 .top-bar {
   padding-top: 30px;
   padding-bottom:30px;
   text-align: center;
+  display: flex;
+  margin: auto;
+  width: 600px;
 }
 
-.styled-label {
-    font-size: 18px;
-    color: #333;
-    font-weight: bold;
+
+.filter-wrapper {
+  flex:1;
+  height: 70px;
+}
+
+.filter-select {
+  width: 150px;
+  padding: 5px;
+}
+
+.filter-values {
+  padding: 5px;
+  display: none;
 }
 
 .stock-search-bar {
-  position: relative;
+  flex:1;
   display: inline-block;
+  position: relative;
 }
 
 /* Style the input field */
@@ -64,13 +79,19 @@ button:hover {
   font-size: 16px;
 }
 
+.filter-values input {
+  border: 1px solid #ddd;
+  padding: 5px;
+  width: 60px;
+}
+
 /* Dropdown container */
 .autocomplete-items {
   position: absolute;
   border: 1px solid #ddd;
   border-top: none;
   z-index: 99;
-  top: 100%;
+  top: 65%;
   left: 0;
   right: 0;
   background-color: #fff;

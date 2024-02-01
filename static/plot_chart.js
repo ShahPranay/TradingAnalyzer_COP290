@@ -1,9 +1,17 @@
+var stockNames = [];
+
 function updateSymbolsList() {
-  const filter_type = document.querySelector('#filter').value;
+  const filter_type = document.getElementById('filterSelect').value;
+  const min_filter_value = document.getElementById('filterMin').value;
+  const max_filter_value = document.getElementById('filterMax').value;
+
+
   fetch('http://127.0.0.1:5000/stock_names', {
     method: 'POST',
     body: JSON.stringify({
-      filter_type: filter_type
+      filter_type: filter_type,
+      min_filter_value: min_filter_value,
+      max_filter_value: max_filter_value,
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -17,7 +25,6 @@ function updateSymbolsList() {
     })
     .then(data => {
       stockNames = data.stock_names;
-      updateStockNameDropdown();
     })
     .catch(error => {
       console.error('Fetch error:', error);
@@ -53,17 +60,6 @@ function parseData(response, label) {
     data: volume,
     yAxis: 1
   }];
-}
-
-function updateStockNameDropdown() {
-  const stockNameDropdown = document.getElementById('stock-symbol');
-  stockNameDropdown.innerHTML = '';
-  stockNames.forEach(name => {
-    const option = document.createElement('option');
-    option.value = name;
-    option.text = name;
-    stockNameDropdown.appendChild(option);
-  });
 }
 
 function plotStockChart() {
@@ -150,6 +146,11 @@ function plotStockChart() {
             }]
           }
         });
+
+        var today = new Date(), lastday = new Date();
+        lastday.setDate(lastday.getDate() - 30);
+        myChart.xAxis[0].setExtremes(lastday.getTime(), today.getTime());
+
       } else {
         console.error('Invalid response format:', data);
       }
@@ -159,11 +160,27 @@ function plotStockChart() {
     });
 }
 
+function toggleFilterValues() {
+  var filtervals = document.getElementById('filterValues'),
+    filtersel = document.getElementById('filterSelect');
+  console.log(filtersel.value);
+  if (filtersel.value === 'default') {
+    filtervals.style.display = 'none';
+  } else {
+    filtervals.style.display = 'block';
+  }
+}
+
 function autocomplete(input) {
   const inputValue = input.value.toLowerCase();
-  const suggestions = stockNames.filter(symb => symb.toLowerCase().startsWith(inputValue));
   const autocompleteContainer = document.getElementById('autocompleteItems');
-  autocompleteContainer.innerHTML = '';
+  autocompleteItems.innerHTML = '';  
+
+  if(inputValue === ''){
+    return;
+  }
+
+  const suggestions = stockNames.filter(symb => symb.toLowerCase().startsWith(inputValue));
   suggestions.forEach(suggestion => {
     const div = document.createElement('div');
     div.textContent = suggestion;
@@ -174,21 +191,27 @@ function autocomplete(input) {
     });
     autocompleteContainer.appendChild(div);
   });
+  console.log(autocompleteContainer.innerHTML);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  var stockNames = [];
-
+  toggleFilterValues();
   updateSymbolsList();
 
   // Fetch available stock names selecting a filter
-  document.getElementById('filter').addEventListener('change', function () {
+  document.getElementById('filterWrapper').addEventListener('change', function () {
     updateSymbolsList();
+  });
+
+  document.getElementById('filterSelect').addEventListener('change', function () {
+    toggleFilterValues();
   });
 
   document.getElementById('searchInput').addEventListener('input', function() {
     autocomplete(this);
   });
+
+
 });
 
