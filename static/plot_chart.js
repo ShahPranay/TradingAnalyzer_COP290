@@ -243,6 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('filterSelect').addEventListener('change', function () {
     toggleFilterValues();
+    updateSymbolsList();
   });
 
   document.getElementById('searchInput').addEventListener('input', function() {
