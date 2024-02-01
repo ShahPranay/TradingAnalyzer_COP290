@@ -24,17 +24,6 @@
 
 </head>
 
-<style>
-  .box {
-            
-            padding: 10px; /* Padding around the content inside the box */
-            width: 150px; /* Make the box width fit its content */
-            display: inline-block; /* Display as inline-block to wrap the text inside */
-            text-align: center; 
-            height: 70px;
-        }
-
-</style>
 <body>
     <header>
         <h1>Welcome to Trading Analyzer, {{ username }}</h1>
@@ -49,8 +38,8 @@
             <option value="twoHundredDayAverage">200 Day Average</option>
           </select>
           <div class="filter-values" id="filterValues">
-            <input type="number" id="filterMin" value="0" placeholder="Min."></input>
-            <input type="number" id="filterMax" value="0" placeholder="Max."></input>
+            <input type="number" id="filterMin" value=0 placeholder="Min."></input>
+            <input type="number" id="filterMax" value=0 placeholder="Max."></input>
           </div>
         </div>
         <div class="stock-search-bar">

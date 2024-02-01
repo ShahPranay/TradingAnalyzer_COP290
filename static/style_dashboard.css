@@ -135,10 +135,10 @@ button:hover {
   margin-right: 100px; /* Optional margin for spacing around the container */
 }
 
-.box {    
-  /* border:2px solid#0056b3; */
-  width: 30px; /* Make the box width fit its content */
-  display: inline-block; /* Display as inline-block to wrap the text inside */
+.box {
+  padding: 10px; 
+  width: 150px; 
+  display: inline-block;
   text-align: center; 
   height: 70px;
 }

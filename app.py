@@ -102,10 +102,10 @@ def get_stock_names():
     # You need to implement this based on your data source (e.g., database)
     # For now, assume you have a list of stock names
     filter_type = request.json['filter_type']
-    min_filter_value = request.json['min_filter_value']
-    max_filter_value = request.json['max_filter_value']
+    min_filter_value = float(request.json['min_filter_value'])
+    max_filter_value = float(request.json['max_filter_value'])
     stock_names = symbolsList
-    if filter_type == 'default':
+    if filter_type == 'default' or (min_filter_value == 0.0 and max_filter_value == 0.0):
         pass
     elif filter_type == 'trailingPE':
         stock_names = [symbol for symbol, info in Tickers_dict.items() if
@@ -129,22 +129,24 @@ def get_stock_names():
 def get_stock_info():
     stock_name = request.json['stock_name']
     stock_info = yf.Ticker(stock_name).info
-    dayLow = stock_info['dayLow']
-    dayHigh = stock_info['dayHigh']
-    yearLow = stock_info['fiftyTwoWeekLow']
-    yearHigh = stock_info['fiftyTwoWeekHigh']
-    Open = stock_info['open']
-    previousClose = stock_info['previousClose']
-    volume = stock_info['volume']
-    currentPrice = stock_info['currentPrice']
-    marketCap = stock_info['marketCap']
-    trailingPE = stock_info['trailingPE']
-    forwardPE = stock_info['forwardPE']
-    fiftyDayAverage = stock_info['fiftyDayAverage']
-    twoHundredDayAverage = stock_info['twoHundredDayAverage']
-    dividendYield = stock_info['dividendYield']
-    totalRevenue = stock_info['totalRevenue']
-    totalDebt = stock_info['totalDebt']
+    print(stock_info)
+    dayLow = stock_info.get('dayLow', '-')
+    dayHigh = stock_info.get('dayHigh', '-')
+    yearLow = stock_info.get('fiftyTwoWeekLow', '-')
+    yearHigh = stock_info.get('fiftyTwoWeekHigh', '-')
+    Open = stock_info.get('open', '-')
+    previousClose = stock_info.get('previousClose', '-')
+    volume = stock_info.get('volume', '-')
+    currentPrice = stock_info.get('currentPrice', '-')
+    marketCap = stock_info.get('marketCap', '-')
+    trailingPE = stock_info.get('trailingPE', '-')
+    forwardPE = stock_info.get('forwardPE', '-')
+    fiftyDayAverage = stock_info.get('fiftyDayAverage', '-')
+    twoHundredDayAverage = stock_info.get('twoHundredDayAverage', '-')
+    dividendYield = stock_info.get('dividendYield', '-')
+    totalRevenue = stock_info.get('totalRevenue','-')
+    totalDebt = stock_info.get('totalDebt', '-')
+    print(totalDebt)
     about = stock_info['longBusinessSummary']
     return jsonify({'dayLow': dayLow, 'dayHigh': dayHigh, 'yearLow': yearLow, 'yearHigh': yearHigh, 'Open': Open, 'previousClose': previousClose, 'volume': volume,
                     'currentPrice': currentPrice, 'marketCap': marketCap, 'trailingPE': trailingPE, 'forwardPE': forwardPE, 'fiftyDayAverage': fiftyDayAverage,

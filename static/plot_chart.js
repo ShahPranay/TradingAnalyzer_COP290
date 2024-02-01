@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
   updateSymbolsList();
 
   // Fetch available stock names selecting a filter
-  document.getElementById('filterWrapper').addEventListener('change', function () {
+  document.getElementById('filterValues').addEventListener('change', function () {
     updateSymbolsList();
   });
 
