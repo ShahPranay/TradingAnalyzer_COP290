@@ -341,5 +341,6 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('pageBody').addEventListener('click', function() {
     clearMenus();
   });
+
 });
 

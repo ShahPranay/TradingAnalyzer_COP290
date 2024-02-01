@@ -8,10 +8,22 @@ body {
 }
 
 header {
+    display: flex;
     background-color: #333;
     color: #fff;
     padding: 20px;
     text-align: center;
+}
+
+.pageHeader {
+  flex:30;
+}
+
+.logout-button {
+  flex:1;
+  border: 1px solid #ddd;
+  padding: 10px;
+  color: #fff;
 }
 
 h2 {
@@ -20,10 +32,6 @@ h2 {
 
 label {
     color: #333; /* Grey */
-}
-
-button:hover {
-    background-color: #0056b3; /* Dark blue */
 }
 
 .chart {
