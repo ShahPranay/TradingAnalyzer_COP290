@@ -22,15 +22,6 @@ label {
     color: #333; /* Grey */
 }
 
-button {
-    background-color: #007bff; /* Blue */
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
 button:hover {
     background-color: #0056b3; /* Dark blue */
 }
@@ -46,7 +37,7 @@ button:hover {
   text-align: center;
   display: flex;
   margin: auto;
-  width: 600px;
+  width: 900px;
 }
 
 
@@ -65,6 +56,12 @@ button:hover {
   display: none;
 }
 
+.filter-values input {
+  border: 1px solid #ddd;
+  padding: 5px;
+  width: 60px;
+}
+
 .stock-search-bar {
   flex:1;
   display: inline-block;
@@ -79,11 +76,6 @@ button:hover {
   font-size: 16px;
 }
 
-.filter-values input {
-  border: 1px solid #ddd;
-  padding: 5px;
-  width: 60px;
-}
 
 /* Dropdown container */
 .autocomplete-items {
@@ -110,6 +102,43 @@ button:hover {
   background-color: #f1f1f1;
 }
 
+.history-wrapper {
+  flex:1;
+  display: inline-block;
+  position: relative;
+}
+
+.history-wrapper button {
+  border: 1px solid #ddd;
+  padding: 10px;
+  width: 100px;
+}
+
+
+/* Dropdown container */
+.history-items {
+  position: absolute;
+  border: 1px solid #ddd;
+  border-top: none;
+  z-index: 99;
+  top: 65%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Style the dropdown items */
+.history-items div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* Style the selected item */
+.history-items div:hover {
+  background-color: #f1f1f1;
+}
 .heading {
   color: #007BFF; 
   text-align: center;

@@ -24,7 +24,7 @@
 
 </head>
 
-<body>
+<body id="pageBody">
     <header>
         <h1>Welcome to Trading Analyzer, {{ username }}</h1>
     </header>
@@ -45,6 +45,10 @@
         <div class="stock-search-bar">
           <input type="text" id="searchInput" placeholder="Stock Symbol..."></input>
           <div class="autocomplete-items" id="autocompleteItems"></div>
+        </div>
+        <div class="history-wrapper">
+          <button class="history-button" id="historyButton">History</button>
+          <div class="history-items" id="historyItems"></div>
         </div>
     </div>
 

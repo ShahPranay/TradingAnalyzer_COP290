@@ -1,6 +1,7 @@
 #Importing Libraries
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
+import json
 from sqlalchemy.util import method_is_overridden
 from werkzeug.security import generate_password_hash, check_password_hash
 import yfinance as yf
@@ -27,6 +28,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
+    stock_history = db.Column(db.String(1000), default="[]")
 
 # Initialize Database within Application Context
 with app.app_context():
@@ -72,12 +74,26 @@ def login():
 # Dashboard Route
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+    print(session['username'])
     return render_template('dashboard.html', username=session['username'])
 
 # Data route to fetch data of a stock for chart
 @app.route('/data', methods=['POST'])
 def getdata():
     stock_name = request.json['stock_name']
+
+    if 'username' in session:
+        username = session['username']
+        user = User.query.filter_by(username=username).first()
+        if user:
+            history = json.loads(user.stock_history)
+            if stock_name in history:
+                history.remove(stock_name)
+            history.insert(0,stock_name)
+            user.stock_history = json.dumps(history)
+            db.session.commit()
 
     tkr = yf.Ticker(stock_name)
     stk_data = tkr.history(period='max', interval='1d')
@@ -172,6 +188,15 @@ def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     return redirect(url_for('index'))
+
+@app.route('/user_history', methods=['POST'])
+def get_user_history():
+    if 'user_id' not in session:
+        return jsonify({})
+    username = session['username']
+    user = User.query.filter_by(username=username).first()
+    history = json.loads(user.stock_history)
+    return jsonify({'history': history})
 
 # Function to convert Huge numbers to Cr unit
 def toCr(num):

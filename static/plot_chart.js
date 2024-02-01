@@ -265,6 +265,53 @@ function autocomplete(input) {
   });
 }
 
+function drawHistoryMenu (history_data) {
+  const historyContainer = document.getElementById('historyItems');
+  const searchInput = document.getElementById('searchInput');
+  historyContainer.innerHTML = '';
+
+  history_data.forEach(history => {
+    const div = document.createElement('div');
+    div.textContent = history;
+    div.addEventListener('click', () => {
+      searchInput.value = history; // set the input value to suggestion
+      historyContainer.innerHTML = '';
+      plotStockChart(); // plot the stock chart
+      fetchStockInfo(); // fetch and update the stock info
+    });
+    historyContainer.appendChild(div);
+  }); 
+}
+
+function fetchStockHistory () {
+  fetch('http://127.0.0.1:5000/user_history', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      drawHistoryMenu(data.history);
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+}
+
+function clearMenus () {
+  const historyContainer = document.getElementById('historyItems');
+  const autocompleteContainer = document.getElementById('autocompleteItems'); // fetch the autocomplete items container, we'll add our suggestions to this element
+  
+  historyContainer.innerHTML = '';
+  autocompleteContainer.innerHTML = '';
+}
+
 // Code to run when the document has been loaded
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -275,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('filterValues').addEventListener('change', function () {
     updateSymbolsList();
   });
-  
+
   // Event listener to  fetch available stock names and toggle filter value input boxes
   document.getElementById('filterSelect').addEventListener('change', function () {
     toggleFilterValues();
@@ -287,5 +334,12 @@ document.addEventListener('DOMContentLoaded', function () {
     autocomplete(this);
   });
 
+  document.getElementById('historyButton').addEventListener('click', function() {
+    fetchStockHistory();
+  });
+
+  document.getElementById('pageBody').addEventListener('click', function() {
+    clearMenus();
+  });
 });
 
