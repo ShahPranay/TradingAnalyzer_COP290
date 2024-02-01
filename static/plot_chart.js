@@ -265,6 +265,7 @@ function autocomplete(input) {
   });
 }
 
+// display the history menu given the history_data
 function drawHistoryMenu (history_data) {
   const historyContainer = document.getElementById('historyItems');
   const searchInput = document.getElementById('searchInput');
@@ -283,6 +284,7 @@ function drawHistoryMenu (history_data) {
   }); 
 }
 
+// fetch the stock history and display it
 function fetchStockHistory () {
   fetch('http://127.0.0.1:5000/user_history', {
     method: 'POST',
@@ -304,6 +306,7 @@ function fetchStockHistory () {
     });
 }
 
+// clear the menus when user clicks anywhere else
 function clearMenus () {
   const historyContainer = document.getElementById('historyItems');
   const autocompleteContainer = document.getElementById('autocompleteItems'); // fetch the autocomplete items container, we'll add our suggestions to this element
