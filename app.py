@@ -127,7 +127,7 @@ def get_stock_names():
 
 @app.route('/stock_info', methods=['POST'])
 def get_stock_info():
-    stock_name = "SBIN.NS"
+    stock_name = request.json['stock_name']
     stock_info = yf.Ticker(stock_name).info
     dayLow = stock_info['dayLow']
     dayHigh = stock_info['dayHigh']

@@ -157,3 +157,10 @@ button:hover {
   font-size: 20px; 
   height:30px;
 }
+
+.more-info {
+  padding-top: 20px;
+  width: 40%;
+  margin: auto;
+  display: none;
+}

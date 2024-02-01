@@ -160,6 +160,40 @@ function plotStockChart() {
     });
 }
 
+function updateStockInfo (stk_info) {
+  var elems = document.getElementsByClassName('box-sub-heading');
+  for(let elem of elems){
+    elem.innerHTML = stk_info[elem.id];
+  }
+}
+
+function fetchStockInfo() {
+  const stockName = document.getElementById('searchInput').value;
+
+  var data_response = fetch('http://127.0.0.1:5000/stock_info', {
+    method: 'POST',
+    body: JSON.stringify({
+      stock_name: stockName,
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      updateStockInfo(data); 
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+  document.getElementById('moreInfo').style.display = 'block';
+}
+
 function toggleFilterValues() {
   var filtervals = document.getElementById('filterValues'),
     filtersel = document.getElementById('filterSelect');
@@ -188,6 +222,7 @@ function autocomplete(input) {
       input.value = suggestion;
       autocompleteContainer.innerHTML = '';
       plotStockChart();
+      fetchStockInfo();
     });
     autocompleteContainer.appendChild(div);
   });
