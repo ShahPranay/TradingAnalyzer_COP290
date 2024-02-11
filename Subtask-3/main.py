@@ -14,7 +14,7 @@ if __name__ == "__main__":
     to_date = sys.argv[4]
     from_date = datetime.strptime(from_date, "%d/%m/%Y")
     to_date = datetime.strptime(to_date, "%d/%m/%Y")
-    
+
     x = n/2
     new_from_date = from_date - timedelta(days=n+x)
     df = stock_df(symbol=symbol, from_date=new_from_date,
@@ -22,6 +22,9 @@ if __name__ == "__main__":
     df = df.iloc[::-1]
 
     flag = True
+    if(n==0):
+        flag = False
+        
     while flag:
         i = 0
         for index, row in df.iterrows():
@@ -44,8 +47,7 @@ if __name__ == "__main__":
             i-=n
             df = df.iloc[i:]
             
-
-    required_columns = ['DATE', 'OPEN', 'CLOSE', 'HIGH', 'LOW', 'LTP', 'VOLUME', 'VALUE', 'NO OF TRADES']
+    required_columns = ['DATE', 'OPEN', 'CLOSE', 'HIGH', 'LOW', 'LTP', 'VOLUME', 'VALUE', 'PREV. CLOSE', 'NO OF TRADES' ]
     df = df[required_columns]
         
     # Save data from df to csv
