@@ -11,7 +11,7 @@ default: run
 # Compile the source file and run the executable with the specified command line arguments
 run: $(SRC)
 	$(CXX) $(CXXFLAGS) -o $(EXEC) $(SRC)
-	./$(EXEC) $(strategy) $(symbol) $(n) $(x) $(start_date) $(end_date)
+	./$(EXEC) $(strategy) $(symbol) $(n) $(x) $(start_date) $(end_date) $(p)
 
 # Clean up generated files
 clean:

@@ -62,9 +62,20 @@ string convertDateFormat(const string& originalDate) {
     return convertedDate;
 }
 
-vector<StockData> getStockData(string symbol, string start_date, string end_date) {
+void writePnL(double pnl, int position, double lastDayPrice){
+    ofstream finalPnLFile("final_pnl.txt");
+    if (!finalPnLFile.is_open()) {
+        std::cerr << "Error: Failed to open file for writing\n";
+        return;
+    }
+    double final_pnl = pnl + position*lastDayPrice;
+    finalPnLFile<<final_pnl<<endl;
+    finalPnLFile.close();
+}
 
-    string command = "python3 main.py " + symbol + " " + start_date + " " + end_date;
+vector<StockData> getStockData(string symbol, string start_date, string end_date, int n) {
+
+    string command = "python3 main.py " + symbol + " " + to_string(n) + " " + start_date + " " + end_date;
     system(command.c_str());
 
     ifstream csvFile(symbol+".csv");
@@ -113,11 +124,9 @@ vector<StockData> getStockData(string symbol, string start_date, string end_date
 }
 
 void BasicStrategy(string symbol, string start_date, string end_date, int n, int x) {
-    start_date = decreaseDays(start_date, n);
 
     // Get stock data
-    vector<StockData> stockData = getStockData(symbol, start_date, end_date);
-    reverse(stockData.begin(), stockData.end());
+    vector<StockData> stockData = getStockData(symbol, start_date, end_date, n);
 
     int position = 0;
     int dir_count = 0;
@@ -161,26 +170,18 @@ void BasicStrategy(string symbol, string start_date, string end_date, int n, int
     dailyCashflowFile.close();
     orderStatisticsFile.close();
 
-    ofstream finalPnLFile("final_pnl.txt");
-    if (!finalPnLFile.is_open()) {
-        std::cerr << "Error: Failed to open file for writing\n";
-        return;
-    }
-    double final_pnl = pnl + position*stockData[stockData.size()-1].close;
-    finalPnLFile<<final_pnl<<endl;
-    finalPnLFile.close();
+    writePnL(pnl, position, stockData[stockData.size()-1].close);
+    
 }
 
-void DMAStrategy(string symbol, string start_date, string end_date, int n, int x, double p) {
-    start_date = decreaseDays(start_date, n);
+void DMAStrategy(string symbol, string start_date, string end_date, int n, int x, int p) {
 
     // Get stock data
-    vector<StockData> stockData = getStockData(symbol, start_date, end_date);
-    reverse(stockData.begin(), stockData.end());
+    vector<StockData> stockData = getStockData(symbol, start_date, end_date,n);
 
     int position = 0;
-    double price_sum = 0;
-    double square_price_sum = 0;
+    double price_sum = 0.0;
+    double square_price_sum = 0.0;
     double pnl = 0.0;
 
     // Open files for writing
@@ -199,13 +200,13 @@ void DMAStrategy(string symbol, string start_date, string end_date, int n, int x
 
 
     for(int i = 0; i < stockData.size(); i++){
-        if(i<n){
+        if(i<n-1){
             price_sum += stockData[i].close;
             square_price_sum += stockData[i].close*stockData[i].close;
         }
         else{
-            price_sum += stockData[i].close;
-            square_price_sum += stockData[i].close*stockData[i].close;
+            price_sum += stockData[i-1].close;
+            square_price_sum += stockData[i-1].close*stockData[i-1].close;
             double mean = price_sum/n;
             double variance = (square_price_sum - (price_sum*price_sum)/n)/n;
             double std_dev = sqrt(variance);
@@ -228,19 +229,12 @@ void DMAStrategy(string symbol, string start_date, string end_date, int n, int x
     dailyCashflowFile.close();
     orderStatisticsFile.close();
 
-    ofstream finalPnLFile("final_pnl.txt");
-    if (!finalPnLFile.is_open()) {
-        std::cerr << "Error: Failed to open file for writing\n";
-        return;
-    }
-    double final_pnl = pnl + position*stockData[stockData.size()-1].close;
-    finalPnLFile<<final_pnl<<endl;
-    finalPnLFile.close();
+    writePnL(pnl, position, stockData[stockData.size()-1].close);
 
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 7) {
+    if (argc < 7) {
         cerr << "Usage: " << argv[0] << " strategy symbol n x start_date end_date\n";
         return 1;
     }
@@ -248,15 +242,17 @@ int main(int argc, char *argv[]) {
     // Extract command line arguments
     string strategy = argv[1];
     string symbol = argv[2];
-    int n = stoi(argv[3]);
     int x = stoi(argv[4]);
     string start_date = argv[5];
     string end_date = argv[6];
 
     if (strategy == "BASIC") {
+        int n = stoi(argv[3]);
         BasicStrategy(symbol, start_date, end_date, n, x);
     }else if(strategy == "DMA"){
-        DMAStrategy(symbol, start_date, end_date, n, x, 0.1);
+        int n = stoi(argv[3]);
+        int p = stoi(argv[7]); 
+        DMAStrategy(symbol, start_date, end_date, n, x, p);
     }
     else{
         cerr << "Error: Invalid strategy\n";
