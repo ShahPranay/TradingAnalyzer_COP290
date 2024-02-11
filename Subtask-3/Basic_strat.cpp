@@ -158,62 +158,86 @@ void BasicStrategy(string symbol, string start_date, string end_date, int n, int
             dailyCashflowFile<<stockData[i].date<<","<<pnl<<endl;
         }
     }
+    dailyCashflowFile.close();
+    orderStatisticsFile.close();
+
+    ofstream finalPnLFile("final_pnl.txt");
+    if (!finalPnLFile.is_open()) {
+        std::cerr << "Error: Failed to open file for writing\n";
+        return;
+    }
+    double final_pnl = pnl + position*stockData[stockData.size()-1].close;
+    finalPnLFile<<final_pnl<<endl;
+    finalPnLFile.close();
 }
 
-// void DMAStrategy(string symbol, string start_date, string end_date, int n, int x, int p) {
-//     start_date = decreaseDays(start_date, n);
+void DMAStrategy(string symbol, string start_date, string end_date, int n, int x, double p) {
+    start_date = decreaseDays(start_date, n);
 
-//     // Get stock data
-//     vector<StockData> stockData = getStockData(symbol, start_date, end_date);
-//     reverse(stockData.begin(), stockData.end());
+    // Get stock data
+    vector<StockData> stockData = getStockData(symbol, start_date, end_date);
+    reverse(stockData.begin(), stockData.end());
 
-//     int position = 0;
-//     double price_sum = 0;
-//     double square_price_sum = 0;
-//     double pnl = 0.0;
+    int position = 0;
+    double price_sum = 0;
+    double square_price_sum = 0;
+    double pnl = 0.0;
 
-//     // Open files for writing
-//     ofstream dailyCashflowFile("daily_pnl.csv");
-//     ofstream orderStatisticsFile("order_statistics.csv");
+    // Open files for writing
+    ofstream dailyCashflowFile("daily_pnl.csv");
+    ofstream orderStatisticsFile("order_statistics.csv");
 
-//     // Check if files are opened successfully
-//     if (!dailyCashflowFile.is_open() || !orderStatisticsFile.is_open()) {
-//         std::cerr << "Error: Failed to open files for writing\n";
-//         return;
-//     }
+    // Check if files are opened successfully
+    if (!dailyCashflowFile.is_open() || !orderStatisticsFile.is_open()) {
+        std::cerr << "Error: Failed to open files for writing\n";
+        return;
+    }
 
-//     // Write headers to CSV files
-//     dailyCashflowFile << "Date,Cashflow\n";
-//     orderStatisticsFile << "Date,Order_dir,Quantity,Price\n";
+    // Write headers to CSV files
+    dailyCashflowFile << "Date,Cashflow\n";
+    orderStatisticsFile << "Date,Order_dir,Quantity,Price\n";
 
 
-//     for(int i = 0; i < stockData.size(); i++){
-//         if(i<n){
-//             price_sum += stockData[i].close;
-//             square_price_sum += stockData[i]*stockData[i];
-//         }
-//         else{
-//             price_sum += stockData[i].close;
-//             square_price_sum += stockData[i]*stockData[i];
-//             double mean = price_sum/n;
-//             double variance = (square_price_sum - (price_sum*price_sum)/n)/n;
-//             double std_dev = sqrt(variance);
-//             if( stockData[i].close <= mean - p*std_dev && position <x){
-//                 orderStatisticsFile<<stockData[i].date<<",BUY,1,"<<stockData[i].close<<endl;
-//                 pnl -= stockData[i].close;
-//                 position++;
-//             }
-//             else if( stockData[i].close >= mean + p*std_dev && position > -x){
-//                 orderStatisticsFile<<stockData[i].date<<",SELL,1,"<<stockData[i].close<<endl;
-//                 pnl += stockData[i].close;
-//                 position--;
-//             }
-//             price_sum -= stockData[i-n].close;
-//             square_price_sum -= stockData[i-n]*stockData[i-n];
-//             dailyCashflowFile<<stockData[i].date<<","<<pnl<<endl;
-//         }
-//     }
-// }
+    for(int i = 0; i < stockData.size(); i++){
+        if(i<n){
+            price_sum += stockData[i].close;
+            square_price_sum += stockData[i].close*stockData[i].close;
+        }
+        else{
+            price_sum += stockData[i].close;
+            square_price_sum += stockData[i].close*stockData[i].close;
+            double mean = price_sum/n;
+            double variance = (square_price_sum - (price_sum*price_sum)/n)/n;
+            double std_dev = sqrt(variance);
+            if( stockData[i].close >= mean + p*std_dev && position <x){
+                orderStatisticsFile<<stockData[i].date<<",BUY,1,"<<stockData[i].close<<endl;
+                pnl -= stockData[i].close;
+                position++;
+            }
+            else if( stockData[i].close <= mean - p*std_dev && position > -x){
+                orderStatisticsFile<<stockData[i].date<<",SELL,1,"<<stockData[i].close<<endl;
+                pnl += stockData[i].close;
+                position--;
+            }
+            price_sum -= stockData[i-n].close;
+            square_price_sum -= stockData[i-n].close*stockData[i-n].close;
+            dailyCashflowFile<<stockData[i].date<<","<<pnl<<endl;
+        }
+    }
+    
+    dailyCashflowFile.close();
+    orderStatisticsFile.close();
+
+    ofstream finalPnLFile("final_pnl.txt");
+    if (!finalPnLFile.is_open()) {
+        std::cerr << "Error: Failed to open file for writing\n";
+        return;
+    }
+    double final_pnl = pnl + position*stockData[stockData.size()-1].close;
+    finalPnLFile<<final_pnl<<endl;
+    finalPnLFile.close();
+
+}
 
 int main(int argc, char *argv[]) {
     if (argc != 7) {
@@ -231,9 +255,9 @@ int main(int argc, char *argv[]) {
 
     if (strategy == "BASIC") {
         BasicStrategy(symbol, start_date, end_date, n, x);
-    } // else if(strategy == "DMA"){
-    //     DMAStrategy(symbol, start_date, end_date, n, x, 2);
-    // }
+    }else if(strategy == "DMA"){
+        DMAStrategy(symbol, start_date, end_date, n, x, 0.1);
+    }
     else{
         cerr << "Error: Invalid strategy\n";
         return 1;
